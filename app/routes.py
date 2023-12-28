@@ -1,12 +1,14 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token, jwt_required
 from werkzeug.security import generate_password_hash, check_password_hash
+from flasgger import swag_from
 from app.models import db, User, Event
 from app.remainder import schedule_reminder
 
 bp = Blueprint('routes', __name__)
 
 @bp.route('/register', methods=['POST'])
+@swag_from("openapi.yml")
 def register_user():
     data = request.get_json()
     email = data.get('email')
@@ -52,7 +54,7 @@ def get_events():
         query = query.order_by(Event.participants.desc())
     elif sort_by == 'creation_time':
         query = query.order_by(Event.id)
-    events = query.all()
+    events = all()
     event_list = [{'id': event.id, 'name': event.name, 'event_date': event.event_date, 'location': event.location, 'venue': event.venue, 'participants': event.get("participants")} for event in events]
     return jsonify({'events': event_list}), 200
 
@@ -93,9 +95,8 @@ def update_event(event_id: str):
     else:
         return jsonify({'error': 'Event not found'}), 404
 
-
-
 @bp.route(rule="/events/<event_id>", methods=["DELETE"])
+@jwt_required()
 def delete_event(event_id: str):
     event = db.get_or_404(Event, event_id)
     if event:

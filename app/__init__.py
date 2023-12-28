@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_jwt_extended import JWTManager
+from flasgger import Swagger
 from app.models import User
 
 def create_app():
@@ -24,5 +25,22 @@ def create_app():
 
     from app.routes import bp as routes_bp
     app.register_blueprint(routes_bp)
+
+    swagger = Swagger(app=app, template_file="openapi.yml", config={
+        "headers": [
+        ],
+        "specs": [
+            {
+                "endpoint": "/openapi",
+                "route": '/{}.yml'.format("openapi"),
+                "rule_filter": lambda rule: True,  # all in
+                "model_filter": lambda tag: True,  # all in
+            }
+        ],
+        "static_url_path": "/flasgger_static",
+        # "static_folder": "static",  # must be set by user
+        "swagger_ui": True,
+        "specs_route": "/docs/"
+    })
 
     return app

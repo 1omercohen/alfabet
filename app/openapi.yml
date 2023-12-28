@@ -1,0 +1,217 @@
+swagger: "2.0"
+info:
+    title: Home Assignment
+    version: 1.0.0
+
+paths:
+    /register:
+        post:
+            summary: Register User
+            operationId: CreateUser
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/UserRequest"
+                required: true
+            responses:
+                "200":
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/RegisterResponse"
+                "400":
+                    description: Invalid ID supplied
+
+    /login:
+        post:
+            summary: Logs user into the system
+            operationId: loginUser
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/UserRequest"
+                required: true
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/LoginResponse"
+                "400":
+                    description: Invalid email/password supplied
+
+    /events:
+        get:
+            summary: Event List
+            operationId: eventList
+            parameters:
+                - in: query
+                  name: sort_by
+                  schema:
+                      type: string
+                      enum:
+                          - "creation_time"
+                          - "event_date"
+                          - "popularity"
+                      default: "creation_time"
+                  required: false
+                  description: Sorted By Column
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/EventList"
+                "400":
+                    description: Invalid email/password supplied
+        post:
+            summary: Create Event
+            operationId: createEvent
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/CreateEvent"
+            responses:
+                "200":
+                    description: successful operation
+
+    /events/{event_id}:
+        get:
+            summary: Get Event By Id
+            operationId: getEvent
+            parameters:
+                - in: path
+                  name: event_id
+                  schema:
+                      type: number
+                      example: 1
+                  required: true
+                  description: Numeric ID of the event to get
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    event:
+                                        $ref: "#/components/schemas/Event"
+                "400":
+                    description: Invalid email/password supplied
+        patch:
+            summary: Update Event
+            operationId: updateEvent
+            parameters:
+                - in: path
+                  name: event_id
+                  schema:
+                      type: number
+                      example: 1
+                  required: true
+                  description: Numeric ID of the event to get
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                event:
+                                    $ref: "#/components/schemas/CreateEvent"
+            responses:
+                "200":
+                    description: successful operation
+
+        delete:
+            summary: Delete Event
+            operationId: deleteEvent
+            parameters:
+                - in: path
+                  name: event_id
+                  schema:
+                      type: number
+                      example: 1
+                  required: true
+                  description: Numeric ID of the event to delete
+            responses:
+                "200":
+                    description: successful operation
+
+components:
+    schemas:
+        UserRequest:
+            type: object
+            properties:
+                email:
+                    type: string
+                    format: email
+                    example: example@domain.com
+                password:
+                    type: string
+                    example: "12345"
+        RegisterResponse:
+            type: object
+            properties:
+                message:
+                    type: string
+                    example: "registeration successfuly"
+        LoginResponse:
+            type: object
+            properties:
+                access_token:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+        Event:
+            type: object
+            additionalProperties:
+                type: object
+                properties:
+                    id:
+                        type: number
+                        example: 1
+                    name:
+                        type: string
+                        example: "event name"
+                    event_date:
+                        type: string
+                        format: date-time
+                        example: "15/12/2024T18:00:00.000Z"
+                    location:
+                        type: string
+                        example: "TlV"
+                    venue:
+                        type: string
+                        example: "dizi quere"
+                    participants:
+                        type: number
+                        example: 150
+        EventList:
+            type: object
+            properties:
+                events:
+                    $ref: "#/components/schemas/Event"
+        CreateEvent:
+            type: object
+            properties:
+                name:
+                    type: string
+                    example: Event Name
+                event_date:
+                    type: string
+                    format: date-time
+                    example: "15/12/2024T18:00:00.000Z"
+                location:
+                    type: string
+                    example: "TlV"
+                venue:
+                    type: string
+                    example: "dizi quere"
+                participants:
+                    type: number
+                    example: 150

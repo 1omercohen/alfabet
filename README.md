@@ -15,12 +15,14 @@ update, delete, and be reminded of events with additional advanced features.
 │   ├── __init__.py
 │   ├── models.py    	 	// Table Describe By Model Type using flask-sqlalchemy
 │   ├── routes.py 		 	// APIs for Project
-│   └── remainder.py     	// Task rmainer 30 minutes before using Celery and redis
+│   |── remainder.py     	// Task rmainer 30 minutes before using Celery and redis
+|	└── openapi.yaml		// Api Documentation swagger Yaml
 ├── tests
 │   ├── routes_test.py.   	// pytest (mocking) + unittest
 │   └── remainder_test.py	// pytest (mocking) + unittest
 ├── run.py				 	// run the project
-├── openapi.yaml			// Api Documentation swagger
+├── openapi.yaml			// Api Documentation swagger Yaml
+├── openapi.json			// Api Documentation swagger Json
 ├── docker-compose.yml   	// postgresql and redis
 └── readme.md            	// describe the assigment choice
 ```
